@@ -1,8 +1,21 @@
 ---
-  - name: install lvm2 package
+  - name: install lvm2 package for CentOS systems
     package:
       name: lvm2
       state: present
+    when: when: ansible_os_family == 'RedHat'
+
+  - name: install lvm2 package for Debian systems
+    package:
+      name: lvm2
+      state: present
+    when: when: ansible_os_family == 'Debian'
+
+  - name: ensure /etc/lvm dir
+    file:
+      path: /etc/lvm
+      state: directory
+
   - name: create docker volume group
     lvg:
       pvs: "{{ docker_direct_lvm_block_device_path }}"
