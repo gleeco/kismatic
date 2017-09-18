@@ -3,11 +3,12 @@
     file:
       path: /etc/docker
       state: directory
+
   - name: write docker config file
     template:
       src: daemon.json
       dest: /etc/docker/daemon.json
-    when: docker_direct_lvm_enabled|bool == true
+
   # start and verify that Docker installed succesfully and is running
   - name: start docker service
     service:
@@ -15,6 +16,12 @@
       state: started
       enabled: yes
     when: force_docker_restart is not defined or force_docker_restart|bool == false # only run if not going to restart right after
+
+  - name: restart docker service because we ALWAYS want daemon.json
+    service:
+      name: docker
+      state: restarted
+      enabled: yes
 
   # force_kubelet_restart=true to force restart
   # on install, service will be started with the task before this
