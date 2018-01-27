@@ -6,6 +6,11 @@
      "dm.use_deferred_removal=true",
      "dm.use_deferred_deletion={{docker.storage.directlvm.enable_deferred_deletion}}"
    ]{% if docker.logs.driver != "" %},{% endif %}
+
+{% elif docker.storage.driver %}
+  "storage-driver": "{{ docker.storage.driver }}",
+  "storage-opts":
+{{ docker.storage.opts | to_nice_json(indent=4) }}
 {% endif %}
 
 {% if docker.logs.driver != "" %}
